@@ -51,14 +51,12 @@ canvas
 ellipse
 {
   position: absolute;
-  top: 30px;
-  left: 50px;
 }
 svg
 {
   position: relative;
   top: 0;
   left: 0;
-   height: 140px;
-  width: 500px;
+   height: 1000px;
+  width: 1500px;
 }

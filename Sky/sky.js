@@ -16,7 +16,7 @@ function sunMoves()
 	  {transform: 'translate(100px, 0px)'}],
 	  { iterations: 2,
 	  	direction: "alternate", 
-	    duration: 15000000});
+	    duration: 15000});
 	player.addEventListener('finish', function() {
 	  target.style.transform = 'translate(0px, 700px)';
 	  console.log("executed");
@@ -44,23 +44,36 @@ function generateClouds()
 	// create the svg element
 	var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 	// set svg attributes
-	svg.setAttribute('width', '600');
-	svg.setAttribute('height', '250');
+	svg.setAttribute('width', '1500');
+	svg.setAttribute('height', '1000');
 	svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
 	// put inside container
 	container.appendChild(svg);
 	// create ellipse
-	var ellipse = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
-	// set ellipse attributes
-	ellipse.setAttribute("cx", "40");
-	ellipse.setAttribute("cy", "45");
-	ellipse.setAttribute("rx", "55");
-	ellipse.setAttribute("ry", "80");
-	ellipse.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
-	// put ellipse inside svg
-	svg.appendChild(ellipse);
+	var l = Math.floor(Math.random() * 500);
+	var j = Math.floor(Math.random() * 500);
+	for (var i = 0; i < 10; i++)
+	{
+		var ellipse = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+		l += 15;
+		j += 15;
+		// set ellipse attributes
+		generateCloudSize(ellipse, l, j);
+		ellipse.setAttribute("fill", "white");
+		ellipse.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+		// put ellipse inside svg
+		svg.appendChild(ellipse);
+	}
 }
 
+// sets ellipse size attributes
+function generateCloudSize(ellipse, l, j)
+{
+	ellipse.setAttribute("cx", l);
+	ellipse.setAttribute("cy", j);
+	ellipse.setAttribute("rx", Math.floor(Math.random() * 100) + 20);
+	ellipse.setAttribute("ry", Math.floor(Math.random() * 100) + 20);
+}
 
 // generates semi-random hex color
 // blue for "sky"
