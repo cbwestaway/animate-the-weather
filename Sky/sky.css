@@ -47,3 +47,18 @@ canvas
   filter: contrast(200%) brightness(200%) contrast(200%) blur(2px) drop-shadow(2px 2px 2px rgb(241, 255, 133));
   z-index: 1;
 }
+
+ellipse
+{
+  position: absolute;
+  top: 30px;
+  left: 50px;
+}
+svg
+{
+  position: relative;
+  top: 0;
+  left: 0;
+   height: 140px;
+  width: 500px;
+}

@@ -37,15 +37,28 @@ function createGradient()
 }
 
 // draw clouds
-function generateClouds() {
-  var canvas = document.getElementById("grad");
-  var ctx = canvas.getContext("2d");
-    ctx.beginPath();
-    ctx.arc(35, 30, 10, 0, Math.PI * Math.random(), true); // Outer circle
-    ctx.arc(40, 35, 10, 0, Math.PI * Math.random(), true);
-    ctx.arc(46, 35, 10, 0, Math.PI * Math.random(), true);
-    ctx.arc(67, 35, 10, 0, Math.PI * Math.random(), true);
-    ctx.stroke();
+function generateClouds() 
+{
+	// parent element
+	var container = document.querySelector(".container");
+	// create the svg element
+	var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+	// set svg attributes
+	svg.setAttribute('width', '600');
+	svg.setAttribute('height', '250');
+	svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+	// put inside container
+	container.appendChild(svg);
+	// create ellipse
+	var ellipse = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+	// set ellipse attributes
+	ellipse.setAttribute("cx", "40");
+	ellipse.setAttribute("cy", "45");
+	ellipse.setAttribute("rx", "55");
+	ellipse.setAttribute("ry", "80");
+	ellipse.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+	// put ellipse inside svg
+	svg.appendChild(ellipse);
 }
 
 
