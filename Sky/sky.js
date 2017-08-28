@@ -4,6 +4,7 @@ createGradient();
 generateClouds();
 
 
+
 var today = new Date();
 
 // translates the "#sun" div
@@ -34,6 +35,7 @@ function createGradient()
 	colorifyGradient(gradient);
 	ctx.fillStyle = gradient;
 	ctx.fillRect(0, 0, 700, 700);
+	return gradient;
 }
 
 // draw clouds
@@ -44,21 +46,28 @@ function generateClouds()
 	// create the svg element
 	var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 	// set svg attributes
-	svg.setAttribute('width', '1500');
-	svg.setAttribute('height', '1000');
 	svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
 	// put inside container
 	container.appendChild(svg);
+	for ( var i = 0; i < 3; i++)
+	{
+		// creates one cloud
+		createCloud(svg);
+	}
+}
+
+function createCloud(svg)
+{
 	// create ellipse
-	var l = Math.floor(Math.random() * 500);
-	var j = Math.floor(Math.random() * 500);
-	for (var i = 0; i < 10; i++)
+	var cx = Math.floor(Math.random() * 500);
+	var cy = Math.floor(Math.random() * 500);
+	for (var i = 0; i < 12; i++)
 	{
 		var ellipse = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
-		l += 15;
-		j += 15;
+		cx += offsetEllipses();
+		cy += offsetEllipses();
 		// set ellipse attributes
-		generateCloudSize(ellipse, l, j);
+		generateCloudSize(ellipse, cx, cy);
 		ellipse.setAttribute("fill", "white");
 		ellipse.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
 		// put ellipse inside svg
@@ -66,13 +75,29 @@ function generateClouds()
 	}
 }
 
-// sets ellipse size attributes
-function generateCloudSize(ellipse, l, j)
+// offset cx and cy
+// (ellipse centers)
+function offsetEllipses()
 {
-	ellipse.setAttribute("cx", l);
-	ellipse.setAttribute("cy", j);
-	ellipse.setAttribute("rx", Math.floor(Math.random() * 100) + 20);
-	ellipse.setAttribute("ry", Math.floor(Math.random() * 100) + 20);
+	var boolean = Math.floor(Math.random() * 2);
+	if (boolean)
+	{
+		offset = 15;
+	}
+	else
+	{
+		offset = -15;
+	}
+	return offset;
+}
+
+// sets ellipse size attributes
+function generateCloudSize(ellipse, cx, cy)
+{
+	ellipse.setAttribute("cx", cx);
+	ellipse.setAttribute("cy", cy);
+	ellipse.setAttribute("rx", Math.floor(Math.random() * 50) + 20);
+	ellipse.setAttribute("ry", Math.floor(Math.random() * 50) + 20);
 }
 
 // generates semi-random hex color
