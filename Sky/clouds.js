@@ -19,7 +19,7 @@ function createSVG()
 function generateClouds() 
 {
 	var svg = createSVG();
-	for ( var i = 0; i < 3; i++)
+	for ( var i = 0; i < 1; i++)
 	{
 		// creates one cloud
 		createCloud(svg);
@@ -91,5 +91,45 @@ function makeLightning(svg)
 	lightning.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
 	// put lightning inside svg
 	svg.appendChild(lightning);
+	// set lightnings path and append
+	lightningPath(lightning);
 	console.log(lightning);
+}
+
+// set lightnings path
+function lightningPath(lightning)
+{
+	var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+	
+	var pathParams =
+	{
+		"strokeWidth": 6,
+		"d": "M 3 10 " + generateLineString()  
+	}	
+	path.setAttribute("stroke-width", pathParams.strokeWidth);
+	path.setAttribute("d", pathParams.d);
+	path.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+	lightning.appendChild(path);									
+}									       
+
+// generates string for lightning's path
+function generateLineString()
+{
+	var lineString = "";
+	for (var i = 1; i < 21; i++)
+	{
+		if ( i % 2 == 0)
+		{
+			lineString += " ";
+			lineString += 25 * i;
+			lineString += " L ";
+		}
+		else
+		{
+			lineString += " ";
+			lineString += Math.floor(Math.random() * 25 ) + 10;
+			lineString += " ";
+		}
+	}
+	return lineString;
 }

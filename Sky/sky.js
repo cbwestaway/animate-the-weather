@@ -95,6 +95,17 @@ function colorifyGradient(gradient)
 	gradient.addColorStop(1, "white");
 }
 
+// have some sort of interval for this
+function redden(gradient)
+{
+	for (var i = 0; i < 11; i++)
+	{
+		var num = i / 10;
+		gradient.addColorStop(num, "#" + pickRed());
+	}
+
+}
+
 // AJAX
 // data from weather api
 	// var xhttp = new XMLHttpRequest();
