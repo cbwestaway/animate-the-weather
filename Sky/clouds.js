@@ -16,40 +16,16 @@ function createSVG()
 // (ellipse centers)
 function offsetEllipses()
 {
-	var boolean = Math.floor(Math.random() * 2);
+	let boolean = Math.floor(Math.random() * 2);
 	if (boolean)
 	{
-		offset = 15;
+		offset = 1;
 	}
 	else
 	{
-		offset = -15;
+		offset = -1;
 	}
 	return offset;
-}
-
-						       
-
-// generates string for lightning's path
-function generateLineString()
-{
-	var lineString = "";
-	for (var i = 1; i < 21; i++)
-	{
-		if ( i % 2 == 0)
-		{
-			lineString += " ";
-			lineString += 25 * i; // small bug here, still works
-			lineString += " L ";
-		}
-		else
-		{
-			lineString += " ";
-			lineString += Math.floor(Math.random() * 25 ) + 10;
-			lineString += " ";
-		}
-	}
-	return lineString;
 }
 
 
@@ -69,7 +45,7 @@ var clouds =
 	// draw clouds
 	"generate":	function() 
 				{
-					for ( var i = 0; i < 1; i++)
+					for ( var i = 0; i < 6; i++)
 					{
 						// creates one cloud
 						this.oneCloud();
@@ -79,13 +55,11 @@ var clouds =
 	"oneCloud": function ()
 				{
 					// create ellipse
-					// var cx = Math.floor(Math.random() * 500);
-					// var cy = Math.floor(Math.random() * 500);
 					for (var i = 0; i < 12; i++)
 					{
 						var ellipse = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
-						this.cx += offsetEllipses();
-						this.cy += offsetEllipses();
+						this.cx += offsetEllipses() * 15;
+						this.cy += offsetEllipses() * 15;
 						// set ellipse attributes
 						this.cloudSize(ellipse);
 						ellipse.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
@@ -121,14 +95,41 @@ var clouds =
 						var pathParams =
 						{
 							"strokeWidth": 6,
-							"d": "M " + this.cx + " " + this.cy + " " + generateLineString()  
+							"d": "M " + this.cx + " " + this.cy + " L " + this.generateLineString() 
+                            
 						}	
 						path.setAttribute("stroke-width", pathParams.strokeWidth);
 						path.setAttribute("d", pathParams.d);
 						path.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
-						lightning.appendChild(path);									
-					}									       
+						lightning.appendChild(path);
+                        console.log(this.cx);
+                    },
+    
+// generates string for lightning's path
+"generateLineString": function ()
+{
+	var lineString = "";
+	for (var i = 1; i < 21; i++)
+	{
+        console.log("new " + this.cx)
+		if ( i % 2 == 0)
+		{
+			lineString += " ";
+			lineString += this.cy + (25 * i); // small bug here, still works
+			lineString += " L ";
+		}
+		else
+		{
+			lineString += " ";
+			lineString += this.cx + offsetEllipses() * Math.floor(Math.random() * 25 ) + 10;
+			lineString += " ";
+		}
+	}
+    console.log(lineString);
+	return lineString;
+}
 };
 
+//for (var i = 0; i < 3; i++)
 clouds.generate();
 clouds.lightning();
