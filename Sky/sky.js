@@ -1,27 +1,11 @@
-// make things happen
-sunMoves();
 
-// translates the "#sun" div
-// across sky
-function sunMoves()
-{
-	var target = document.querySelector("#sun");
-	var player = target.animate([
-	  {transform: 'translate(5px, 700px)'},
-	  {transform: 'translate(100px, 0px)'}],
-	  { iterations: 2,
-	  	direction: "alternate", 
-	    duration: 15000});
-	player.addEventListener('finish', function() {
-	  target.style.transform = 'translate(0px, 700px)';
-	  console.log("executed");
-	});
-}
+var Sky = function(dayLength){
 
-var sky = {
+    this.dayLength = dayLength || 20000;
+    this.sunsUp = true;
 
-    "createGradient": // linear-gradient for HTML canvas element 
-                      // the "sky"
+    Sky.prototype.createGradient = // linear-gradient for HTML canvas element 
+                                    // the "sky"
                         function ()
                         {
                             var c = document.getElementById("grad");
@@ -30,28 +14,25 @@ var sky = {
                             this.colorifyGradient(gradient);
                             ctx.fillStyle = gradient;
                             ctx.fillRect(0, 0, 700, 700);
+                            //this.gradient = gradient;
+                            console.log(ctx);
                             return gradient;
                         },
     
-    "colorifyGradient": // fills the gradient
+    Sky.prototype.colorifyGradient = // fills the gradient
                         function (gradient)
                         {
-                            gradient.addColorStop(0, "#" + this.restrictBlue());
-                            gradient.addColorStop(0.1, "#" + this.restrictBlue());
-                            gradient.addColorStop(0.2, "#" + this.restrictBlue());
-                            gradient.addColorStop(0.3, "#" + this.restrictBlue());
-                            gradient.addColorStop(0.4, "#" + this.restrictBlue());
-                            gradient.addColorStop(0.5, "#" + this.restrictBlue());
-                            gradient.addColorStop(0.6, "#" + this.restrictBlue());
-                            gradient.addColorStop(0.7, "#" + this.restrictBlue());
-                            gradient.addColorStop(0.8, "#" + this.pickRed());
-                            gradient.addColorStop(0.9, "#" + this.pickRed());
+                            for(var i=1; i<10; i++)
+                                {
+                                    var hue = "#" + this.pickRed();//this.hues[i];
+                                    gradient.addColorStop(i/10, hue)
+                                }
                             gradient.addColorStop(1, "white");
                         },
     
-    "pickRed": // generates semi-random hex color
+    Sky.prototype.pickRed = // generates semi-random hex color
                 // red for "sunset"
-                function pickRed()
+                function()
                 {
                     var values = ["a", "b", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
                     var colorR = "d1";
@@ -63,8 +44,8 @@ var sky = {
                     return colorR;
                 },
     
-    "redden": // have some sort of interval for this
-            function redden(gradient)
+    Sky.prototype.redden =// have some sort of interval for this
+            function(gradient)
             {
                 for (var i = 0; i < 11; i++)
                 {
@@ -74,8 +55,8 @@ var sky = {
 
             },
     
-    "restrictBlue": // picks a more conservative blue
-                function restrictBlue()
+    Sky.prototype.restrictBlue = // picks a more conservative blue
+                function()
                 {
                         var values = ["0", "1", "2", "3", "4", "5", "6", "7"];
                     var colorB = "";
@@ -86,31 +67,39 @@ var sky = {
                     }
                     return colorB + "f2";
                 }
-			
+    Sky.prototype.triggerSun = // translates the "#sun" div across sky
+                function()
+                {
+                    var target = document.querySelector("#sun");
+                    var player = target.animate([
+                        {transform: 'translate(5px, 700px)'},
+                        {transform: 'translate(100px, 0px)'}],
+                        {iterations: 2,
+                         direction: "alternate", 
+                         duration: this.dayLength});
+                    player.addEventListener('finish', function() {
+                        target.style.transform = 'translate(0px, 700px)';
+                        console.log("executed");
+                        this.sunsUp=false;
+                    });
+                }
+    Sky.prototype.generateHues =
+        function()
+                {
+                    for(var i = 0; i<10; i++)
+                        {
+                            this.hues[i] = 4;
+                        }
+                    setTimeout(this.generateHues(), this.dayLength/1000);
+                }
+    Sky.prototype.execute = 
+                (function()
+                {
+                
+                })();
+//    /this.generateHues();
+    this.createGradient();
+    this.triggerSun();
 }
 
-sky.createGradient()
-
-// AJAX
-//// data from weather api
-var xhttp = new XMLHttpRequest();
-//api.openweathermap.org/data/2.5/forecast?q=London,us&mode=xml
-//6cdad093c77b980063e4816a17bdb813
-// xhttp.open("GET", "api.openweathermap.org/data/2.5/weather?q=London,uk&APPID=23c6d8a5f7d6de2d797f7870eef6d43f", true);
-// xhttp.send(null);
-//xhttp.onreadystatechange = function()
-//{
-//  if (xhttp.readyState === XMLHttpRequest.DONE) 
-//   {
-//       if (xhttp.status === 200) 
-//       {
-//           alert(xhttp.responseText);
-//            var responseData = String(xhttp.responseText);
-//            var response = JSON.parse(xhttp.responseText);
-//        } 
-//        else 
-//        {
-//            alert('There was a problem with the request.');
-//        }
-//   }
-//}
+var x = new Sky();

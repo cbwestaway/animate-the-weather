@@ -76,18 +76,26 @@ var clouds =
 					ellipse.setAttribute("fill", this.fill);
 				},
 
-	"lightning": function()
+	"lightning": 
+    {
+        "build": function()
 				{
 					var lightning = document.createElementNS("http://www.w3.org/2000/svg", "g");
 					lightning.setAttribute("fill", "yellow");
 					lightning.setAttribute("stroke", "yellow");
 					lightning.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
 					// put lightning inside svg
-					this.svg.appendChild(lightning);
-					// set lightnings path and append
-					this.lightningPath(lightning);
-					console.log(lightning);
+					clouds.svg.appendChild(lightning);
 				},
+       "flash": function(lightning)
+        {
+        	setTimeout(function(){
+                 console.log(this);
+        		// set lightnings path and append
+            clouds.lightning.lightningPath(lightning);
+        	}, 1000)
+        },
+        
 	"lightningPath": function (lightning)
 					{
 						var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -95,7 +103,7 @@ var clouds =
 						var pathParams =
 						{
 							"strokeWidth": 6,
-							"d": "M " + this.cx + " " + this.cy + " L " + this.generateLineString() 
+							"d": "M " + clouds.cx + " " + clouds.cy + " L " + clouds.generateLineString() 
                             
 						}	
 						path.setAttribute("stroke-width", pathParams.strokeWidth);
@@ -103,7 +111,8 @@ var clouds =
 						path.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
 						lightning.appendChild(path);
                         console.log(this.cx);
-                    },
+                    }
+    },
     
 // generates string for lightning's path
 "generateLineString": function ()
@@ -132,4 +141,5 @@ var clouds =
 
 //for (var i = 0; i < 3; i++)
 clouds.generate();
-clouds.lightning();
+clouds.lightning.build();
+clouds.lightning.flash();
