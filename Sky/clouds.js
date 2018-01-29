@@ -90,7 +90,6 @@ var clouds =
        "flash": function(lightning)
         {
         	setTimeout(function(){
-                 console.log(this);
         		// set lightnings path and append
             clouds.lightning.lightningPath(lightning);
         	}, 1000)
@@ -110,7 +109,6 @@ var clouds =
 						path.setAttribute("d", pathParams.d);
 						path.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
 						lightning.appendChild(path);
-                        console.log(this.cx);
                     }
     },
     
@@ -120,7 +118,6 @@ var clouds =
 	var lineString = "";
 	for (var i = 1; i < 21; i++)
 	{
-        console.log("new " + this.cx)
 		if ( i % 2 == 0)
 		{
 			lineString += " ";
@@ -134,7 +131,6 @@ var clouds =
 			lineString += " ";
 		}
 	}
-    console.log(lineString);
 	return lineString;
 }
 };

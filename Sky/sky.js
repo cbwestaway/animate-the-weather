@@ -1,8 +1,10 @@
 
-var Sky = function(dayLength){
+var Sky = function(data){
 
-    this.dayLength = dayLength || 20000;
-    this.sunsUp = true;
+    this.dayLength = data.dayLength || 20000;
+    //this.hues = data.hues || [];
+    this.dayCompleted = data.dayCompleted || 0;
+    this.sunsUp = data.sunsUp || true;
 
     Sky.prototype.createGradient = // linear-gradient for HTML canvas element 
                                     // the "sky"
@@ -14,9 +16,8 @@ var Sky = function(dayLength){
                             this.colorifyGradient(gradient);
                             ctx.fillStyle = gradient;
                             ctx.fillRect(0, 0, 700, 700);
-                            //this.gradient = gradient;
-                            console.log(ctx);
-                            return gradient;
+                            this.gradient = gradient;
+                            //return gradient;
                         },
     
     Sky.prototype.colorifyGradient = // fills the gradient
@@ -24,7 +25,7 @@ var Sky = function(dayLength){
                         {
                             for(var i=1; i<10; i++)
                                 {
-                                    var hue = "#" + this.pickRed();//this.hues[i];
+                                    var hue = this.hues[i];//"#" + this.pickRed()
                                     gradient.addColorStop(i/10, hue)
                                 }
                             gradient.addColorStop(1, "white");
@@ -79,27 +80,45 @@ var Sky = function(dayLength){
                          duration: this.dayLength});
                     player.addEventListener('finish', function() {
                         target.style.transform = 'translate(0px, 700px)';
-                        console.log("executed");
                         this.sunsUp=false;
                     });
                 }
     Sky.prototype.generateHues =
-        function()
-                {
-                    for(var i = 0; i<10; i++)
+                function(){
+                    var hues = [];
+                    for(var i=0; i<10; i++)
+                    { 
+                        if(this.dayCompleted == 0 || x.dayCompleted > 7 || x.dayCompleted < 3)
+                            {
+                                var r = Math.floor(Math.random() * 225 + 180);
+                                var b = Math.floor(Math.random() * 200);
+                            }
+                        else
+                            {
+                                var r = Math.floor(Math.random() * 100);
+                                var b = Math.floor(Math.random() * 225 + 180);
+                            }
+                        hues[i] = String("rgb("+r+","+50+","+b+")"); 
+                    }
+                    setInterval(this.generateHues, this.dayLength/10)
+                    if (x)
                         {
-                            this.hues[i] = 4;
+                            x.dayCompleted++;
+                            x.hues = hues;
+                            x.createGradient();
                         }
-                    setTimeout(this.generateHues(), this.dayLength/1000);
+                    else
+                            this.hues = hues;
+                        
                 }
     Sky.prototype.execute = 
                 (function()
                 {
                 
                 })();
-//    /this.generateHues();
+    this.generateHues();
     this.createGradient();
     this.triggerSun();
 }
 
-var x = new Sky();
+var x = new Sky({});
