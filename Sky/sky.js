@@ -85,22 +85,31 @@ var Sky = function(data){
                 }
     Sky.prototype.generateHues =
                 function(){
-                    var hues = [];
+                    if(x)
+                        var hues = x.hues;
+                    else
+                        hues = [];
+                    var singleHue = "";
                     for(var i=0; i<10; i++)
                     { 
-                        if(this.dayCompleted == 0 || x.dayCompleted > 7 || x.dayCompleted < 3)
+                        if(this.dayCompleted == 0)
                             {
                                 var r = Math.floor(Math.random() * 225 + 180);
                                 var b = Math.floor(Math.random() * 200);
+                                singleHue = String("rgb("+r+","+50+","+b+")");
                             }
-                        else
+                        else if (x.dayCompleted == i)
                             {
-                                var r = Math.floor(Math.random() * 100);
-                                var b = Math.floor(Math.random() * 225 + 180);
+                                r = Math.floor(Math.random() * 225);
+                                b = Math.floor(Math.random() * 225);
+                                singleHue = String("rgb("+r+","+50+","+b+")");
+                                console.log(hues[i])
                             }
-                        hues[i] = String("rgb("+r+","+50+","+b+")"); 
+                        hues[i] =  singleHue || hues[i];
                     }
-                    setInterval(this.generateHues, this.dayLength/10)
+                    if (i == 10)
+                        delete this;
+                    setInterval(this.generateHues, this.dayLength/6)
                     if (x)
                         {
                             x.dayCompleted++;
@@ -111,6 +120,7 @@ var Sky = function(data){
                             this.hues = hues;
                         
                 }
+    Sky.prototype.getReturn
     Sky.prototype.execute = 
                 (function()
                 {
