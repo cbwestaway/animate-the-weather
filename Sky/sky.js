@@ -12,10 +12,10 @@ var Sky = function(data){
                         {
                             var c = document.getElementById("grad");
                             var ctx = c.getContext("2d");
-                            var gradient = ctx.createLinearGradient(0, 0, 0, 700);
+                            var gradient = ctx.createLinearGradient(0, 0, 0, window.outerHeight);
                             this.colorifyGradient(gradient);
                             ctx.fillStyle = gradient;
-                            ctx.fillRect(0, 0, 700, 700);
+                            ctx.fillRect(0, 0, window.outerWidth, window.outerHeight);
                             this.gradient = gradient;
                             //return gradient;
                         },
@@ -25,8 +25,8 @@ var Sky = function(data){
                         {
                             for(var i=1; i<10; i++)
                                 {
-                                    var hue = this.hues[i];//"#" + this.pickRed()
-                                    gradient.addColorStop(i/10, hue)
+                                    var hue = this.hues[i];
+                                    gradient.addColorStop(i/10, hue.toRBG())
                                 }
                             gradient.addColorStop(1, "white");
                         },
@@ -35,14 +35,14 @@ var Sky = function(data){
                 // red for "sunset"
                 function()
                 {
-                    var values = ["a", "b", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-                    var colorR = "d1";
-                    for (var i = 0; i < 4; i++)
-                    {
-                        var part = values[Math.floor(Math.random() * 12)];
-                        colorR += part;
-                    }
-                    return colorR;
+                   r = Math.floor(Math.random() * 225) + 200;
+                   b = Math.floor(Math.random() * 225);
+                   singleHue = {red: r, green: 70, blue: b};
+                   singleHue.toRBG = function()
+                   {
+                       return "rgb("+ this.red +","+ this.green +","+ this.blue +")"
+                   }
+                   return singleHue;
                 },
     
     Sky.prototype.redden =// have some sort of interval for this
@@ -57,30 +57,40 @@ var Sky = function(data){
             },
     
     Sky.prototype.restrictBlue = // picks a more conservative blue
-                function()
+                function(dark)
                 {
-                        var values = ["0", "1", "2", "3", "4", "5", "6", "7"];
-                    var colorB = "";
-                    for (var i = 0; i < 4; i++)
-                    {
-                        var part = values[Math.floor(Math.random() * 8)];
-                        colorB += part;
-                    }
-                    return colorB + "f2";
+                   if(dark)
+                        {
+                            var r = Math.floor(Math.random() * 50) + 30;
+                            var b = Math.floor(Math.random() * 100) + 50; 
+                            var g = Math.floor(Math.random() * 50);
+                        }
+                   else
+                       {
+                            r = Math.floor(Math.random() * 225);
+                            b = Math.floor(Math.random() * 225) + 180;
+                            g = 70
+                       }
+                   var singleHue = {red: r, green: g, blue: b};
+                   singleHue.toRBG = function()
+                   {
+                       return "rgb("+ this.red +","+ this.green +","+ this.blue +")"
+                   }
+                   return singleHue;
                 }
     Sky.prototype.triggerSun = // translates the "#sun" div across sky
                 function()
                 {
                     var target = document.querySelector("#sun");
                     var player = target.animate([
-                        {transform: 'translate(5px, 700px)'},
-                        {transform: 'translate(100px, 0px)'}],
+                        {transform: 'translate(0px, '+window.outerHeight+'px)'},
+                        {transform: 'translate(0px, 0px)'}],
                         {iterations: 2,
                          direction: "alternate", 
                          duration: this.dayLength});
                     player.addEventListener('finish', function() {
-                        target.style.transform = 'translate(0px, 700px)';
-                        this.sunsUp=false;
+                        target.style.transform = 'translate(0px, '+window.outerHeight+'px)';
+                        this.sunsUp = false
                     });
                 }
     Sky.prototype.generateHues =
@@ -90,28 +100,48 @@ var Sky = function(data){
                     else
                         hues = [];
                     var singleHue = "";
-                    for(var i=0; i<10; i++)
-                    { 
-                        if(this.dayCompleted == 0)
-                            {
-                                var r = Math.floor(Math.random() * 225 + 180);
-                                var b = Math.floor(Math.random() * 200);
-                                singleHue = String("rgb("+r+","+50+","+b+")");
-                            }
-                        else if (x.dayCompleted == i)
-                            {
-                                r = Math.floor(Math.random() * 225);
-                                b = Math.floor(Math.random() * 225);
-                                singleHue = String("rgb("+r+","+50+","+b+")");
-                                console.log(hues[i])
-                            }
-                        hues[i] =  singleHue || hues[i];
-                    }
-                    if (i == 10)
-                        delete this;
-                    setInterval(this.generateHues, this.dayLength/6)
+                    if(this.dayCompleted == 0)
+                        {
+                            for (var i = 0; i < 10; i++)
+                                {
+                                    if(i < 2)
+                                        hues[i] = this.restrictBlue(dark=true);
+                                    else
+                                        hues[i] = this.pickRed();
+                                }
+                        }
+                    else
+                        {
+                             for (var i = 0; i < 10; i++)
+                                {
+                                    if(i < x.dayCompleted + 2 && x.dayCompleted < 50)
+                                        {
+                                            hues[i].blue += 5
+                                            hues[i].green += 1
+                                           // hues[i].red -= 5
+                                        }
+                                    else
+                                        {
+                                            if(i < 2)
+                                                {
+                                                    //hues[i].red -= 3
+                                                    hues[i].green -= 3
+                                                    hues[i].blue -= 3
+                                                }
+                                            else
+                                                {
+                                                    hues[i].red += 15
+                                                    hues[i].green -= 5
+                                                    hues[i].blue -= 5
+                                                }
+                                        }
+                                }
+                        }
+                    setInterval(this.generateHues, this.dayLength/50)
                     if (x)
                         {
+                            if (!x.sunsUp)
+                                delete x;
                             x.dayCompleted++;
                             x.hues = hues;
                             x.createGradient();

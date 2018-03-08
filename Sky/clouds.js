@@ -35,7 +35,7 @@ function offsetEllipses()
 var clouds =
 {
 	"cx": Math.floor(Math.random() * 500),
-	"cy": Math.floor(Math.random() * 500),
+	"cy": Math.floor(Math.random() * 250),
 	"rx": Math.floor(Math.random() * 50) + 20,
 	"ry": Math.floor(Math.random() * 50) + 20,
 	"fill": "white",
